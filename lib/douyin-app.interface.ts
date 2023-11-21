@@ -39,7 +39,7 @@ export interface ICheckImageResponse extends IStateResponse {
   predicts: ICheckImageResponsePredict[]
 }
 
-export interface ISendOptions {
+export interface ISendParams {
   access_token: string
   app_id: string
   open_id: string
@@ -52,14 +52,14 @@ interface ICheckTextTask {
   content: string
 }
 
-export interface ICheckTextOptions {
+export interface ICheckTextParams {
   access_token: string
   tasks: ICheckTextTask[]
 }
 
-export interface ICheckImageOptions {
+export interface ICheckImageParams {
   access_token: string
-  app_id: string
-  image: string
-  image_data: string
+  app_id?: string
+  image?: string
+  image_data?: string
 }

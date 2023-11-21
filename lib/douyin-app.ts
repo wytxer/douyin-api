@@ -6,9 +6,9 @@ import {
   IAccessTokenResponse,
   ICheckTextResponse,
   ICheckImageResponse,
-  ISendOptions,
-  ICheckTextOptions,
-  ICheckImageOptions
+  ISendParams,
+  ICheckTextParams,
+  ICheckImageParams
 } from './douyin-app.interface'
 
 export class DouyinApp {
@@ -38,12 +38,14 @@ export class DouyinApp {
    */
   async code2Session(code: string): Promise<ICode2SessionResponse> {
     const { appid, secret } = this.config
-    const data = { appid, secret, code }
-
     return await this.request({
       method: 'post',
       url: '/api/apps/v2/jscode2session',
-      data
+      data: {
+        appid,
+        secret,
+        code
+      }
     })
   }
 
@@ -54,54 +56,100 @@ export class DouyinApp {
    */
   async accessToken(): Promise<IAccessTokenResponse> {
     const { appid, secret } = this.config
-
     return await this.request({
-      method: 'get',
-      url: `/api/apps/v2/token?grant_type=client_credential&appid=${appid}&secret=${secret}`
+      method: 'post',
+      url: '/api/apps/v2/token',
+      data: {
+        appid,
+        secret,
+        grant_type: 'client_credential'
+      }
+    })
+  }
+
+  /**
+   * 获取小程序全局唯一后台接口调用凭据（不需要用户授权）
+   * @link https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/server/interface-request-credential/non-user-authorization/get-client_token
+   * @returns
+   */
+  async clientToken(): Promise<IAccessTokenResponse> {
+    const { appid, secret } = this.config
+    return await this.request({
+      baseURL: this.apiDouyin,
+      method: 'post',
+      url: '/oauth/client_token',
+      data: {
+        appid,
+        secret,
+        grant_type: 'client_credential'
+      }
     })
   }
 
   /**
    * 发送一次性订阅消息
-   * @param options
+   * @param params
    * @link https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/server/subscribe-notification/notify/
    * @returns
    */
-  async send(options: ISendOptions): Promise<IStateResponse> {
+  async send(params: ISendParams): Promise<IStateResponse> {
     return await this.request({
       method: 'post',
       url: '/api/apps/subscribe_notification/developer/v1/notify',
-      data: options
+      data: params
     })
   }
 
   /**
    * 文本安全检测
-   * @param options
+   * @param params
    * @link https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/server/content-security/content-security-detect
    * @returns
    */
-  async checkText(options: ICheckTextOptions): Promise<ICheckTextResponse> {
+  async checkText(params: ICheckTextParams): Promise<ICheckTextResponse> {
+    const { access_token, tasks } = params
     return await this.request({
-      method: 'post',
       baseURL: this.apiDouyin,
+      method: 'post',
       url: '/api/v2/tags/text/antidirt',
-      data: options
+      data: tasks,
+      headers: {
+        'X-Token': access_token
+      }
     })
   }
 
   /**
    * 图片安全检测
-   * @param options
+   * @param params
+   * @link https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/server/content-security/picture-detect-v2
+   * @returns
+   */
+  async checkImageV2(params: ICheckImageParams): Promise<ICheckImageResponse> {
+    const { access_token, app_id, image, image_data } = params
+    return await this.request({
+      method: 'post',
+      url: '/api/apps/censor/image',
+      data: { access_token, app_id, image, image_data }
+    })
+  }
+
+  /**
+   * 图片安全检测
+   * @param params
    * @link https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/server/content-security/picture-detect-v3
    * @returns
    */
-  async checkImage(options: ICheckImageOptions): Promise<ICheckImageResponse> {
+  async checkImageV3(params: ICheckImageParams): Promise<ICheckImageResponse> {
+    const { access_token, app_id, image, image_data } = params
     return await this.request({
-      method: 'post',
       baseURL: this.apiDouyin,
+      method: 'post',
       url: '/api/apps/v1/censor/image',
-      data: options
+      data: { app_id, image, image_data },
+      headers: {
+        'access-token': access_token
+      }
     })
   }
 }
