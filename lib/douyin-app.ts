@@ -109,10 +109,9 @@ export class DouyinApp {
   async checkText(params: ICheckTextParams): Promise<ICheckTextResponse> {
     const { access_token, tasks } = params
     return await this.request({
-      baseURL: this.apiDouyin,
       method: 'post',
       url: '/api/v2/tags/text/antidirt',
-      data: tasks,
+      data: { tasks },
       headers: {
         'X-Token': access_token
       }
