@@ -1,3 +1,5 @@
 export * from './douyin.interface'
 export * from './douyin-app.interface'
 export * from './douyin-app'
+export * from './douyin-pay.interface'
+export * from './douyin-pay'

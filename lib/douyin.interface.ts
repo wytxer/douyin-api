@@ -10,8 +10,7 @@ export interface IStateResponse {
 
 export interface IDouyinPayConfig {
   appid: string
-  mchid: string
-  publicKey: Buffer
-  privateKey: Buffer
-  secret: string
+  salt: string
+  token: string
+  env: string
 }
