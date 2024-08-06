@@ -1,7 +1,7 @@
 import { createHash } from 'crypto'
 import axios, { AxiosRequestConfig } from 'axios'
 
-import { IDouyinPayConfig } from './douyin.interface'
+import { IDouyinPayV1Config } from './douyin.interface'
 import { IPayInfoByOutOrderNoOptions } from './douyin-pay-v1.interface'
 
 /**
@@ -14,7 +14,7 @@ import { IPayInfoByOutOrderNoOptions } from './douyin-pay-v1.interface'
  */
 
 export class DouyinPayV1 {
-  constructor(config: IDouyinPayConfig) {
+  constructor(config: IDouyinPayV1Config) {
     const keys = ['appid', 'salt', 'token', 'env']
     keys.forEach((key) => {
       if (!config[key]) {

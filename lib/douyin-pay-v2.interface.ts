@@ -1,8 +1,22 @@
 /**
- * 查询订单详情参数
+ * 签名验证参数
  */
-export interface IPayInfoV2ByOutOrderNoOptions {
-  app_id: string
+export interface ISignVerifyOptions {
+  timestamp: string
+  nonce: string
+  signature: string
+  body: any
 }
 
-// todo 类型补全
+/**
+ * 查询订单详情参数
+ */
+export interface IOrderByOrderIdOptions {
+  order_id: string
+  access_token: string
+}
+
+export interface IOrderByOutOrderNoOptions {
+  out_order_no: string
+  access_token: string
+}
